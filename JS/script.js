@@ -26,6 +26,8 @@ buttonElement.addEventListener("click", function(){
     }
     console.log(bombs);
 
+    let isGameOver = false;
+
     let point = 0;
 
     for(let i = 1; i <= 100; i++){
@@ -35,16 +37,20 @@ buttonElement.addEventListener("click", function(){
         divSquareParentElement.appendChild(divSquareElement);
 
         divSquareElement.addEventListener("click", function (){
-
-            if (bombs.includes(i)){
-                divSquareElement.classList.add("square-bomb");
-                console.log("YOU DIED");
-            } else {
-                divSquareElement.classList.add("square-clicked");
-                point++;
+            if (!isGameOver){
+                if (bombs.includes(i)){
+                    divSquareElement.classList.add("square-bomb");
+                    console.log("YOU DIED");
+                    isGameOver = true;
+                } else {
+                    divSquareElement.classList.add("square-clicked");
+                    point++;
+                    console.log(point);
+                }
             }
 
-            console.log(point);
+
+            
 
         })
 

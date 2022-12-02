@@ -1,0 +1,28 @@
+header{
+    height: 10vh;
+}
+
+main > div.row{
+    background-color: #7FFFD4;
+    height: 80vh;
+}
+
+
+
+div#game-container{
+    width: 500px;
+    height: 500px;
+    margin: 7.5rem auto 0;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.square{
+    border: 1px solid rgb(0, 0, 0);
+    width: calc(100% / 10);
+    height: calc(100% / 10);
+    cursor: pointer;
+}
+
+.square-clicked{
+    background-color: #59ffc8;
+}

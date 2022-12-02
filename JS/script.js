@@ -16,36 +16,71 @@ let buttonElement = document.querySelector("a");
 
 buttonElement.addEventListener("click", function(){
 
-        let divSquareParentElement = document.getElementById("game-container");
-        divSquareParentElement.classList.remove("d-none");
+    let divSquareParentElement = document.getElementById("game-container");
+    divSquareParentElement.classList.remove("d-none");
+    divSquareParentElement.innerHTML = "";
 
-        divSquareParentElement.innerHTML = "";
+    const bombs = [];
+    for (let k = 0; k < 16; k++){
+        bombs.push(getRandomUniqueNumber(bombs, 1, 101))
+    }
+    console.log(bombs);
 
-        for(let i = 1; i <= 100; i++){
+    let point = 0;
 
-            const divSquareElement = getNewSquare(i);
-            divSquareElement.innerHTML = `<span class="m-auto">${i}</span>`;
-            divSquareParentElement.appendChild(divSquareElement);
+    for(let i = 1; i <= 100; i++){
+
+        const divSquareElement = getNewSquare();
+        divSquareElement.innerHTML = `<span class="m-auto">${i}</span>`;
+        divSquareParentElement.appendChild(divSquareElement);
+
+        divSquareElement.addEventListener("click", function (){
+
+            if (bombs.includes(i)){
+                divSquareElement.classList.add("square-bomb");
+                console.log("YOU DIED");
+            } else {
+                divSquareElement.classList.add("square-clicked");
+                point++;
+            }
+
+            console.log(point);
+
+        })
+
+
     
-        }
-
-    
+    }
 })
 
-function getNewSquare (index) {
+function getRandomNumber (min, max){
+    if (min === max){
+        return max
+    }
+
+    return Math.floor(Math.random() * (max - min) ) + min;
+}
+
+function getNewSquare () {
 
     const divNewSquare = document.createElement("div");
     divNewSquare.classList.add("square", "d-flex");
     
-    divNewSquare.addEventListener("click", function (){
 
-        divNewSquare.classList.toggle("square-clicked");
-        console.log("");
-        console.log(`${"Hai cliccato la cella numero:"} ${index}`);
-
-    })
     
     return divNewSquare;
 }
 
+function getRandomUniqueNumber (blacklist, min, max){
+    let isValid = false;
+    let randomNumber;
 
+    while (isValid === false){
+        randomNumber = getRandomNumber(min, max);
+    
+        if (!blacklist.includes(randomNumber)){
+            isValid = true;
+        }
+    }
+    return randomNumber;
+}

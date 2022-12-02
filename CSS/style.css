@@ -26,3 +26,7 @@ div#game-container{
 .square-clicked{
     background-color: #59ffc8;
 }
+
+.square-bomb{
+    background-color: red;
+}

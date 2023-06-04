@@ -3,28 +3,30 @@ header {
 }
 
 main>div.row {
-    background-color: #7FFFD4;
+    background-color: yellowgreen;
     height: 90vh;
 }
 
-
+div#game-status {
+    height: 10vh;
+}
 
 div#game-container {
-    width: 500px;
-    height: 500px;
-    margin: 3.5rem auto 0;
-    border: 1px solid rgb(0, 0, 0);
+    width: 50vh;
+    height: 50vh;
+    margin: 10vh auto;
+    border: 1px solid rgb(255, 255, 255);
 }
 
 .square {
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid rgb(255, 255, 255);
     width: calc(100% / 10);
     height: calc(100% / 10);
     cursor: pointer;
 }
 
 .square-clicked {
-    background-color: #59ffc8;
+    background-color: blue;
 }
 
 .square-bomb {

@@ -22,29 +22,39 @@ buttonElement.addEventListener("click", function () {
 
     const bombs = [];
     for (let k = 0; k < 16; k++) {
-        bombs.push(getRandomUniqueNumber(bombs, 1, 20))
+        bombs.push(getRandomUniqueNumber(bombs, 1, 100));
     }
     console.log(bombs);
 
     let isGameOver = false;
 
-    let point = 0;
+    let points = 0;
+    let lastGamePoints = 0;
+
+    const scoreEl = document.createElement('p');
+    const scoreParentEl = document.getElementById('game-status');
+    scoreParentEl.innerHTML = '';
+    scoreEl.classList.add('mb-0', 'fs-1', 'text-primary');
+    // scoreEl.innerText = `Punti : ${point}`;
+    scoreParentEl.appendChild(scoreEl);
 
     for (let i = 1; i <= 100; i++) {
 
         const divSquareElement = getNewSquare();
-        divSquareElement.innerHTML = `<span class="m-auto">${i}</span>`;
 
         divSquareElement.addEventListener("click", function () {
             if (!isGameOver) {
                 if (bombs.includes(i)) {
                     divSquareElement.classList.add("square-bomb");
-                    console.log("YOU DIED");
+                    lastGamePoints = points;
+                    console.log('lgp' + lastGamePoints);
+                    scoreEl.classList.add('text-danger');
+                    scoreEl.innerText = 'Hai Perso!';
                     isGameOver = true;
                 } else {
                     divSquareElement.classList.add("square-clicked");
-                    point++;
-                    console.log(point);
+                    points++;
+                    scoreEl.innerText = `Punti : ${points}`;
                 }
             }
         }, { once: true });

@@ -14,15 +14,15 @@
 
 let buttonElement = document.querySelector("a");
 
-buttonElement.addEventListener("click", function(){
+buttonElement.addEventListener("click", function () {
 
     let divSquareParentElement = document.getElementById("game-container");
     divSquareParentElement.classList.remove("d-none");
     divSquareParentElement.innerHTML = "";
 
     const bombs = [];
-    for (let k = 0; k < 16; k++){
-        bombs.push(getRandomUniqueNumber(bombs, 1, 101))
+    for (let k = 0; k < 16; k++) {
+        bombs.push(getRandomUniqueNumber(bombs, 1, 20))
     }
     console.log(bombs);
 
@@ -30,15 +30,14 @@ buttonElement.addEventListener("click", function(){
 
     let point = 0;
 
-    for(let i = 1; i <= 100; i++){
+    for (let i = 1; i <= 100; i++) {
 
         const divSquareElement = getNewSquare();
         divSquareElement.innerHTML = `<span class="m-auto">${i}</span>`;
-        divSquareParentElement.appendChild(divSquareElement);
 
-        divSquareElement.addEventListener("click", function (){
-            if (!isGameOver){
-                if (bombs.includes(i)){
+        divSquareElement.addEventListener("click", function () {
+            if (!isGameOver) {
+                if (bombs.includes(i)) {
                     divSquareElement.classList.add("square-bomb");
                     console.log("YOU DIED");
                     isGameOver = true;
@@ -48,43 +47,31 @@ buttonElement.addEventListener("click", function(){
                     console.log(point);
                 }
             }
+        }, { once: true });
 
-
-            
-
-        })
-
-
-    
+        divSquareParentElement.appendChild(divSquareElement);
     }
 })
 
-function getRandomNumber (min, max){
-    if (min === max){
+function getRandomNumber(min, max) {
+    if (min === max) {
         return max
     }
-
-    return Math.floor(Math.random() * (max - min) ) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getNewSquare () {
-
+function getNewSquare() {
     const divNewSquare = document.createElement("div");
     divNewSquare.classList.add("square", "d-flex");
-    
-
-    
     return divNewSquare;
 }
 
-function getRandomUniqueNumber (blacklist, min, max){
+function getRandomUniqueNumber(blacklist, min, max) {
     let isValid = false;
     let randomNumber;
-
-    while (isValid === false){
+    while (isValid === false) {
         randomNumber = getRandomNumber(min, max);
-    
-        if (!blacklist.includes(randomNumber)){
+        if (!blacklist.includes(randomNumber)) {
             isValid = true;
         }
     }

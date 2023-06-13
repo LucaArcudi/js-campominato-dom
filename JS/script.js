@@ -12,94 +12,98 @@
 
 
 
-let buttonElement = document.querySelector("a");
 let records = [];
 let bestScore = 0;
+let lastGameScore = 0;
+
+let buttonElement = document.querySelector("a");
 buttonElement.addEventListener("click", function () {
-    let divSquareParentElement = document.getElementById("game-container");
-    divSquareParentElement.classList.remove("d-none");
-    divSquareParentElement.innerHTML = "";
+
+    const squareElementParent = getSquareElementParent('game-container')
+
+    const numberOfCells = 100
+
+    const numberOfBombs = 16
     const bombs = [];
-    for (let k = 0; k < 5; k++) {
-        bombs.push(getRandomUniqueNumber(bombs, 1, 25));
+    for (let k = 0; k < numberOfBombs; k++) {
+        bombs.push(getRandomUniqueNumber(bombs, 1, numberOfCells));
     }
+
     console.log(bombs);
+
     let isGameOver = false;
-    let points = 0;
-    let lastGamePoints = 0;
-    const scoreEl = document.createElement('p');
-    const scoreParentEl = document.getElementById('game-status');
-    scoreParentEl.innerHTML = '';
-    scoreEl.innerText = `Punti : ${points}`;
-    scoreEl.classList.add('mb-0', 'fs-1', 'text-secondary');
-    scoreParentEl.appendChild(scoreEl);
-    const bestScoreElement = document.createElement('p');
-    const bestScoreParentEl = document.getElementById('game-record');
-    bestScoreParentEl.innerHTML = '';
-    if (bestScore < 20) {
+    let score = 0;
+
+    const scoreElement = createScoreElement('p', score)
+    getScoreElementParent('game-status', scoreElement)
+
+    const bestScoreElement = createBestScoreElement('p')
+    if (bestScore < numberOfCells - bombs.length) {
         bestScoreElement.innerText = `Miglior punteggio: ${bestScore}`
     } else {
         bestScoreElement.innerText = `Miglior punteggio: ${bestScore}. Non puoi fare di meglio!`
     }
-    bestScoreElement.classList.add('mb-0', 'fs-3', 'text-secondary');
-    bestScoreParentEl.appendChild(bestScoreElement);
-    const lastGameScoreEl = document.createElement('p');
-    const lastGameScoreParentEl = document.getElementById('game-points');
-    lastGameScoreParentEl.innerHTML = '';
-    lastGameScoreEl.classList.add('mb-0', 'fs-3', 'text-secondary');
-    lastGameScoreParentEl.appendChild(lastGameScoreEl);
-    for (let i = 1; i <= 25; i++) {
-        const divSquareElement = getNewSquare();
-        divSquareElement.addEventListener("click", function () {
+    getBestScoreElementParent('game-record', bestScoreElement)
+
+    const lastGameScoreElement = createLastGameScoreElement('p')
+    getLastGameScoreElementParent('game-points', lastGameScoreElement)
+
+    lastGameScoreElement.innerText = `Punteggio ultima partita: ${lastGameScore}`;
+
+    for (let i = 1; i <= numberOfCells; i++) {
+        const squareElement = createSquareElement(numberOfCells);
+        squareElement.addEventListener("click", function () {
+
             if (!isGameOver) {
                 if (bombs.includes(i)) {
-                    divSquareElement.classList.add("square-bomb");
-                    lastGamePoints = points;
-                    lastGameScoreEl.innerText = `Punteggio partita: ${lastGamePoints}`
-                    records.push(lastGamePoints);
-                    for (let i = 0; i < records.length; i++) {
-                        while (bestScore < records[i]) {
-                            bestScore = records[i];
-                        }
-                    }
-                    if (bestScore < 20) {
+                    squareElement.classList.add("square-bomb");
+                    lastGameScore = score;
+                    lastGameScoreElement.innerText = `Punteggio partita: ${lastGameScore}`;
+                    records.push(lastGameScore);
+
+                    bestScore = getMaxValueInArray(records, bestScore)
+
+                    if (bestScore < numberOfCells - bombs.length) {
                         bestScoreElement.innerText = `Miglior punteggio: ${bestScore}`
                     } else {
                         bestScoreElement.innerText = `Miglior punteggio: ${bestScore}. Non puoi fare di meglio!`
                     }
-                    scoreEl.classList.replace('text-secondary', 'text-danger');
-                    scoreEl.innerText = 'Hai perso!';
+
+                    scoreElement.classList.replace('text-secondary', 'text-danger');
+                    scoreElement.innerText = 'Hai perso!';
+
                     isGameOver = true;
                 } else {
-                    divSquareElement.classList.add("square-clicked");
-                    points++;
-                    scoreEl.innerText = `Punti : ${points}`;
-                    if (points === 25 - bombs.length) {
-                        lastGamePoints = points;
-                        lastGameScoreEl.innerText = `Punteggio partita: ${lastGamePoints}`
-                        records.push(lastGamePoints);
-                        bestScore = points
+                    squareElement.classList.add("square-clicked");
+                    score++;
+                    scoreElement.innerText = `Punti : ${score}`;
+
+                    if (score === numberOfCells - bombs.length) {
+                        lastGameScore = score;
+                        lastGameScoreElement.innerText = `Punteggio partita: ${lastGameScore}`
+                        records.push(lastGameScore);
+                        bestScore = score
                         bestScoreElement.innerText = `Miglior punteggio: ${bestScore}. Non puoi fare di meglio!`
-                        scoreEl.classList.replace('text-secondary', 'text-success');
-                        scoreEl.innerText = 'Hai vinto!';
+                        scoreElement.classList.replace('text-secondary', 'text-success');
+                        scoreElement.innerText = 'Hai vinto!';
                         isGameOver = true;
                     }
                 }
             }
         }, { once: true });
-        divSquareParentElement.appendChild(divSquareElement);
+        squareElementParent.appendChild(squareElement);
     }
 })
+
+/***************
+CUSTOM fUNCTIONS
+***************/
+
 function getRandomNumber(min, max) {
     if (min === max) {
         return max
     }
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function getNewSquare() {
-    const divNewSquare = document.createElement("div");
-    divNewSquare.classList.add("square", "d-flex");
-    return divNewSquare;
 }
 function getRandomUniqueNumber(blacklist, min, max) {
     let isValid = false;
@@ -111,4 +115,56 @@ function getRandomUniqueNumber(blacklist, min, max) {
         }
     }
     return randomNumber;
+}
+function getMaxValueInArray(array, variable) {
+    for (let i = 0; i < array.length; i++) {
+        while (variable < array[i]) {
+            variable = array[i];
+        }
+    }
+    return variable
+}
+function createSquareElement(arg) {
+    const squareElement = document.createElement("div");
+    squareElement.classList.add("square", "d-flex");
+    squareElement.style.width = `calc(100%/${Math.sqrt(arg)})`
+    squareElement.style.height = `calc(100%/${Math.sqrt(arg)})`
+    return squareElement;
+}
+function getSquareElementParent(id) {
+    const squareElementParent = document.getElementById(id);
+    squareElementParent.classList.remove("d-none");
+    squareElementParent.innerHTML = "";
+    return squareElementParent
+}
+function createScoreElement(tag, score) {
+    let scoreElement = document.createElement(tag)
+    scoreElement.innerText = `Punti : ${score}`;
+    scoreElement.classList.add('mb-0', 'fs-1', 'text-secondary');
+    return scoreElement
+}
+function getScoreElementParent(id, child) {
+    const scoreElementParent = document.getElementById(id);
+    scoreElementParent.innerHTML = '';
+    scoreElementParent.appendChild(child);
+}
+function createBestScoreElement(tag) {
+    const bestScoreElement = document.createElement(tag);
+    bestScoreElement.classList.add('mb-0', 'fs-3', 'text-secondary');
+    return bestScoreElement
+}
+function getBestScoreElementParent(id, child) {
+    const bestScoreElementParent = document.getElementById(id);
+    bestScoreElementParent.innerHTML = '';
+    bestScoreElementParent.appendChild(child);
+}
+function createLastGameScoreElement(tag) {
+    const lastGameScoreElement = document.createElement(tag);
+    lastGameScoreElement.classList.add('mb-0', 'fs-3', 'text-secondary');
+    return lastGameScoreElement
+}
+function getLastGameScoreElementParent(id, child) {
+    const lastGameScoreElementParent = document.getElementById(id);
+    lastGameScoreElementParent.innerHTML = '';
+    lastGameScoreElementParent.appendChild(child);
 }

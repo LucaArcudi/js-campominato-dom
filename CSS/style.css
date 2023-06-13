@@ -24,9 +24,7 @@ div#game-container {
 
 .square {
     border: 1px solid grey;
-    width: calc(100% / 5);
-    height: calc(100% / 5);
-    cursor: pointer;
+    cursor: crosshair;
 }
 
 .square-clicked {
